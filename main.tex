@@ -6,13 +6,13 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-\title{DYNAMIC CONTEXT-AWARE TRIES FOR KNOWLEDGE GRAPH-CONSTRAINED LARGE LANGUAGE MODEL GENERATION}
-\author{BERNARD KIRK ADJANOR KATAMANSO
-\newline ERICA AMONOR
-\newline JOSEPH OSEI NYARKO
-\newline JESSICA AFUA ETORNAM NSAFOAH
+\title{Dynamic Context-Aware Tries For Knowledge Graph-Constained Large Language Model Generation}
+\author{Bernard Kirk Adjanor Katamanso
+\newline Erica Amanor
+\newline Joseph Osei Nyarko
+\newline Jessica Afua Etornam Nsafoah
 \newline
-\newline Supervised By: DR ERIC AFFUM}
+\newline Supervised By: Dr. Eric Affum}
 \institute{University of Mines and Technology \\ Faculty of Computing and Mathematical Science \\ Computer Science and Engineering Department}
 \logo{\includegraphics[height =1.5 cm]{WhatsApp Image 2025-03-11 at 11.07.51_bbf10778.jpg}}
 \date{ July ,2026}
@@ -30,8 +30,11 @@
         \item Introduction
         \item Problem Statement
         \item Objectives
+        \item Tools
+        \item Facilities
         \item Methodology
-        \item Results
+        \item Experimental Design
+        \item Experimental Results
         \item Discussion \& Contributions
         \item Recommendations
         \item References
@@ -41,22 +44,24 @@
 % Introduction
 \begin{frame}{Introduction}
     \begin{itemize}
-        \item LLMs hallucinate, producing factually incorrect outputs
+        \item LLMs hallucinate, producing plausible but factually incorrect outputs (Brown et al., 2020).
         \vspace{0.3cm}
-        \item KGQA requires answers that follow real graph structure
+        \item KGQA requires answers grounded in real graph structure (He et al., 2021; Lan et al., 2023).
         \vspace{0.3cm}
-        \item Constrained decoding (GCR, DoG) guarantees validity but not relevance
+        \item Constrained decoding methods (GCR, DoG) guarantee structural validity but not semantic relevance (Geng et al., 2023; Li et al., 2025; Luo et al., 2025).
         \vspace{0.3cm}
-        \item A 3-hop question on Freebase can produce $\sim$24,000 structurally valid paths, yet only one is correct
+        \item A 3-hop question on Freebase can produce $\sim$24,000 structurally valid paths, yet only one leads to the correct answer.
     \end{itemize}
 \end{frame}
 
 % Problem Statement
 \begin{frame}{Statement of Problem}
     \begin{itemize}
-        \item GCR's trie is fixed before decoding starts, so it cannot adapt to question intent or the evolving chain
+        \item GCR's trie is fixed before decoding starts, so it cannot adapt to question intent or the evolving reasoning chain (Luo et al., 2025).
         \vspace{0.3cm}
-        \item The LLM must filter semantically irrelevant paths using internal knowledge, the same mechanism that causes hallucinations
+        \item This forces the LLM to filter semantically irrelevant paths using internal knowledge, the same mechanism that causes hallucinations (Li et al., 2025).
+        \vspace{0.3cm}
+        \item Existing work assumes tighter constraints improve accuracy, but no metric exists to measure constraint quality independently of answer quality.
     \end{itemize}
 \end{frame}
 
@@ -77,35 +82,40 @@
     \end{itemize}
 \end{frame}
 
-% Tools and Facilities to Be Used
-\begin{frame}{Tools and Facilities}
-    \begin{columns}[T]
-        \begin{column}{0.48\textwidth}
-        \textbf{Software}
-            \begin{itemize}
-                \item Python, PyTorch, HuggingFace
-                \item GCR Framework
-                \item Sentence-transformers (MiniLM)
-                \item NetworkX, marisa\_trie
-                \item Freebase (WebQSP, CWQ)
-            \end{itemize}
-        \end{column}
-        \begin{column}{0.48\textwidth}
-        \textbf{Hardware \& Sources}
-            \begin{itemize}
-                \item NVIDIA RTX 4090 (24\,GB)
-                \item ACM, arXiv, ACL Anthology
-            \end{itemize}
-        \end{column}
-    \end{columns}
+% Tools
+\begin{frame}{Tools}
+    \begin{itemize}
+        \item Python, PyTorch, HuggingFace Transformers
+        \vspace{0.3cm}
+        \item GCR codebase (Luo et al., 2025)
+        \vspace{0.3cm}
+        \item Sentence-transformers (MiniLM-L6-v2)
+        \vspace{0.3cm}
+        \item NetworkX, marisa\_trie
+        \vspace{0.3cm}
+        \item Freebase (via WebQSP and CWQ benchmarks)
+    \end{itemize}
+\end{frame}
+
+% Facilities
+\begin{frame}{Facilities}
+    \begin{itemize}
+        \item NVIDIA RTX 4090 GPU (24 GB VRAM)
+        \vspace{0.3cm}
+        \item ACM Digital Library, arXiv, ACL Anthology
+        \vspace{0.3cm}
+        \item Google Colab, local Linux workstation
+    \end{itemize}
 \end{frame}
 
 % Methods to Be Used
 \begin{frame}{Methods}
     \begin{itemize}
-        \item Literature review and theoretical baseline
-        \item Algorithm design and TypeOracle implementation
-        \item Experimental benchmarking on WebQSP and CWQ
+        \item Literature review of constrained decoding approaches (GCR, DoG)
+        \item Design and implementation of TypeOracle with range and type gates
+        \item Development of DCA-Trie v1 (static filtering) and v2 (dynamic expansion)
+        \item Experimental evaluation on WebQSP and CWQ benchmarks
+        \item Analysis using Hits@1, SIR, FNR, latency, and memory metrics
     \end{itemize}
 \end{frame}
 
@@ -241,20 +251,28 @@
 
 % Constraint Specification
 \begin{frame}{Upgraded Constraint}
-    \begin{columns}[T]
-        \begin{column}{0.48\textwidth}
-        \textbf{Baseline (GCR/DoG):}
-        \[
-          W_{\text{val}}^{\text{GCR}}(t) = f(G, E_q)
-        \]
-        \end{column}
-        \begin{column}{0.48\textwidth}
-        \textbf{Proposed (DCA-Trie):}
-        \[
-          W_{\text{val}}^{\text{DCA}}(t) = f(G, E_q, q, y_{<t})
-        \]
-        \end{column}
-    \end{columns}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Baseline (GCR/DoG):}
+      \[
+        W_{\text{val}}^{\text{GCR}}(t) = f(G, E_q)
+      \]
+      \vspace{0.3em}
+      \footnotesize The valid token set depends only on the knowledge graph $G$ and entity mentions $E_q$. The same set of paths is available at every decoding step.
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Proposed (DCA-Trie):}
+      \[
+        W_{\text{val}}^{\text{DCA}}(t) = f(G, E_q, q, y_{<t})
+      \]
+      \vspace{0.3em}
+      \footnotesize The valid token set also depends on the question $q$ and partial output $y_{<t}$. The constraint adapts as the model generates.
+    \end{column}
+  \end{columns}
+
+  \vspace{0.5em}
+  \centering
+  \small\textit{Key difference: DCA-Trie conditions the mask on the question and partial output, enabling context-aware pruning.}
 \end{frame}
 
 \begin{frame}{Design Conditions}
@@ -265,47 +283,91 @@
     \end{itemize}
 \end{frame}
 
+% Experimental Design
+\begin{frame}{Experimental Design: Overview}
+  \textbf{Goal:} Evaluate whether symbolic type-oracle filtering improves constraint quality without degrading answer accuracy.
+
+  \vspace{0.5em}
+  \textbf{Datasets:}
+  \begin{itemize}
+    \item WebQSP (1,628 test queries, 3-hop, Freebase)
+    \item ComplexWebQuestions (CWQ) for generalisation
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Baselines:}
+  \begin{itemize}
+    \item Unconstrained LLM (no KG mask)
+    \item GCR (Luo et al., 2025), static KG-Trie
+    \item DoG (Li et al., 2025), static KG-Trie with graph decoding
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{LLM Backbone:} Llama-3.1-8B, beam search ($k = 10$).
+\end{frame}
+
+\begin{frame}{Experimental Design: Evaluation Metrics}
+  \begin{itemize}
+    \item \textbf{Hits@1,} exact-match answer accuracy
+    \vspace{0.3cm}
+    \item \textbf{SIR,} semantic irrelevance ratio (constraint quality)
+    \vspace{0.3cm}
+    \item \textbf{FNR,} false-negative rate on gold paths (recall)
+    \vspace{0.3cm}
+    \item \textbf{Latency \& memory overhead}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Experimental Design: Research Questions}
+  \begin{enumerate}
+    \item Does TypeOracle reduce SIR without exceeding 5\% FNR?
+    \vspace{0.3cm}
+    \item Does tighter constraint improve or degrade Hits@1?
+    \vspace{0.3cm}
+    \item What is the runtime and memory cost of DCA-Trie v1?
+    \vspace{0.3cm}
+    \item Can DCA-Trie generalise to complex questions (CWQ)?
+  \end{enumerate}
+\end{frame}
+
 % Constrained Decoding Math
 \begin{frame}{Constrained Decoding in LLMs}
-  At each token step $t$, the LLM produces logits $\mathbf{h}_t \in \mathbb{R}^{|V|}$ over the vocabulary $V$.
-  A constraint mask $\mathbf{m}_t \in \{0,1\}^{|V|}$ zeros out invalid tokens:
+  At each step $t$, the LLM produces logits $\mathbf{h}_t$ over vocabulary $V$. A mask $\mathbf{m}_t$ zeros out invalid tokens:
 
   \[
     \tilde{P}(x_t) = \text{softmax}\!\bigl(\mathbf{h}_t + (1 - \mathbf{m}_t) \cdot (-\infty)\bigr)
   \]
 
   \vspace{0.5em}
-  \begin{itemize}
-    \item In GCR/DoG, $\mathbf{m}_t$ comes from a static trie built before decoding: $\mathbf{m}_t = f(G, E_q)$
-    \item DCA-Trie conditions the mask on the question and partial output: $\mathbf{m}_t = f(G, E_q, q, y_{<t})$
-    \item Only tokens corresponding to valid KG triples receive non-zero probability
-  \end{itemize}
+  \textbf{GCR/DoG (static):} $\mathbf{m}_t = f(G, E_q)$, trie built before decoding (Luo et al., 2025; Li et al., 2025).
+
+  \vspace{0.3em}
+  \textbf{DCA-Trie (dynamic):} $\mathbf{m}_t = f(G, E_q, q, y_{<t})$, adapts to question and partial output.
 \end{frame}
 
 % TypeOracle Design
 \begin{frame}{TypeOracle: Gate Design}
-  Two symbolic gates over KG ontology metadata, applied per candidate triple $(e_t, r, e')$:
+  Two symbolic gates per candidate triple $(e_t, r, e')$, no encoder or threshold required:
 
   \vspace{0.5em}
-  \textbf{Gate 1: Property Range Gate (every hop)}
+  \textbf{Range Gate (every hop):} checks $e'$'s types against relation $r$'s range:
   \[
     \text{range\_gate}(r, e') = \mathbf{1}\!\bigl[\text{types}(e') \cap \text{range}(r) \neq \emptyset\bigr]
   \]
-  Checks that the tail entity's types fall within the relation's expected range.
 
   \vspace{0.5em}
-  \textbf{Gate 2: Answer Type Gate (terminal hop only)}
+  \textbf{Type Gate (terminal hop):} checks terminal entity matches answer type $\mathcal{T}(q)$:
   \[
     \text{type\_gate}(e', q, h, L) = \mathbf{1}\!\bigl[\text{types}(e') \cap \mathcal{T}(q) \neq \emptyset\bigr]
   \]
-  Checks that the terminal entity matches the inferred answer type $\mathcal{T}(q)$.
 
   \vspace{0.5em}
-  \textbf{Combined:} $\text{admissible} = \text{range\_gate} \land \text{type\_gate}$, with conservative fallback (admit when schema info is missing).
+  Admissible only if both pass. Unknown schema info conservatively admits the candidate.
 \end{frame}
+
 % SIR Definition
 \begin{frame}{Diagnostic Metric: SIR}
-  SIR measures the fraction of structurally valid paths that are semantically incompatible with the question.
+  \textbf{SIR} measures the fraction of candidate paths that are \emph{semantically irrelevant} to the question, paths that exist in the knowledge graph but do not actually help answer the question.
 
   \[
     \text{SIR}(q, t) = \frac{\sum_{p \in \mathcal{P}(q, t)} \text{irrelevant}(p, q)}{|\mathcal{P}(q, t)|}
@@ -316,6 +378,9 @@
   \[
     \overline{\text{SIR}} = \frac{1}{|Q|} \sum_{q \in Q} \frac{1}{L_q} \sum_{t=1}^{L_q} \text{SIR}(q, t)
   \]
+
+  \vspace{0.5em}
+  A lower SIR means the oracle admits fewer irrelevant paths. GCR: $\overline{\text{SIR}} = 1.0$ (all paths admitted); DCA-Trie v1: $\overline{\text{SIR}} = 0.145$.
 \end{frame}
 
 % DCA-Trie v1
@@ -333,7 +398,9 @@
     \item Applies range and type gate checks to $\mathcal{N}(e_t)$ during generation
   \end{itemize}
 \end{frame}
-\begin{frame}{Results: Hits@1 Comparison}
+
+% Experimental Results
+\begin{frame}{Experimental Results: Overall Performance}
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -356,11 +423,14 @@
 \end{axis}
 \end{tikzpicture}
 
-\vspace{0.5em}
+\vspace{0.3em}
 \footnotesize WebQSP, 1,628 test queries, Llama-3.1-8B, beam $k$=10
+
+\vspace{0.5em}
+\textbf{Interpretation:} DCA-Trie v1 achieves 86.4\% Hits@1, a 5.2pp drop from GCR. DCA-Trie v2 drops further to 54.0\%, confirming that aggressive pruning eliminates correct paths.
 \end{frame}
 
-\begin{frame}{Results: Constraint Quality}
+\begin{frame}{Experimental Results: Search-Space Reduction \& SIR}
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -392,6 +462,46 @@
     \item Latency overhead: +0.5\%
 \end{itemize}
 \end{minipage}
+
+\vspace{0.5em}
+\textbf{Interpretation:} TypeOracle reduces SIR from 1.0 to 0.145, removing 85.5\% of semantically irrelevant paths while maintaining FNR below 5\%.
+\end{frame}
+
+\begin{frame}{Experimental Results: Runtime \& Memory}
+  \begin{itemize}
+    \item \textbf{Runtime:} DCA-Trie v1 adds $<$0.5\% latency over GCR (negligible overhead from $O(1)$ set intersection).
+    \vspace{0.3cm}
+    \item \textbf{Memory:} TypeOracle stores ontology metadata ($<$2 MB for Freebase); no additional GPU memory required.
+    \vspace{0.3cm}
+    \item \textbf{Scaling:} Gate cost is constant per candidate triple; total cost scales with BFS frontier size, not path length.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Interpretation:} The symbolic oracle introduces no measurable computational bottleneck, making it practical for deployment.
+\end{frame}
+
+% GCR vs DCA-Trie Comparison
+\begin{frame}{GCR vs DCA-Trie: Comparison}
+\centering
+  \small
+  \begin{tabular}{l c c}
+    \toprule
+    \textbf{Criterion} & \textbf{GCR} & \textbf{DCA-Trie} \\
+    \midrule
+    Hits@1 & \checkmark\ Better & $\times$ \\
+    Accuracy & \checkmark\ Better & $\times$ \\
+    Structural faithfulness & Similar & \checkmark\ Maintained \\
+    Semantic relevance & $\times$ & \checkmark\ Better \\
+    Search-space reduction & $\times$ & \checkmark\ 14.5\% reduction \\
+    Runtime & \checkmark\ Slightly faster & Almost identical (0.5\% overhead) \\
+    Oracle analysis & $\times$ & \checkmark\ New contribution \\
+    New metric (SIR) & $\times$ & \checkmark \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \footnotesize
+  GCR trades accuracy for faithfulness. DCA-Trie maintains faithfulness while tightening semantic relevance.
 \end{frame}
 
 % Key Contributions
@@ -416,15 +526,17 @@
 
 % Discussion
 \begin{frame}{Discussion}
-    \begin{itemize}
-        \item \textbf{Non-monotone:} Tighter constraints do not guarantee better answers.
-        \vspace{0.3cm}
-        \item \textbf{Four degradation mechanisms:} gold-path exclusion, beam competition, regex type-inference noise, precision--recall trade-off.
-        \vspace{0.3cm}
-        \item \textbf{TypeOracle efficiency:} $O(1)$ per path, no encoder, no threshold, only +0.5\% latency.
-        \vspace{0.3cm}
-        \item \textbf{SIR fills a gap:} diagnoses constraint quality independently of answer accuracy.
-    \end{itemize}
+  \begin{itemize}
+    \item TypeOracle reduced SIR by 85.5\% while maintaining structural faithfulness and FNR $<$ 5\%, yet Hits@1 dropped by 5.2pp; improvements in constraint quality did not translate into higher answer accuracy.
+    \vspace{0.3cm}
+    \item This challenges the implicit assumption in GCR and DoG that tightening the search space necessarily improves reasoning performance.
+    \vspace{0.3cm}
+    \item Structural constraint quality and reasoning accuracy are distinct properties that should be optimised independently.
+    \vspace{0.3cm}
+    \item Four degradation mechanisms identified: gold-path exclusion, beam competition, regex type-inference noise, and the precision--recall trade-off.
+    \vspace{0.3cm}
+    \item SIR provides the first diagnostic for measuring constraint quality decoupled from answer accuracy.
+  \end{itemize}
 \end{frame}
 
 %Demonstration
@@ -436,15 +548,15 @@
 
 %Conclusion
 \begin{frame}{Conclusion}
-    \begin{itemize}
-        \item DCA-Trie v1 meets all three conditions: 100\% faithfulness, 14.5\% path reduction, FNR $<$ 5\%.
-        \vspace{0.3cm}
-        \item TypeOracle achieves meaningful tightening with $O(1)$ symbolic gates.
-        \vspace{0.3cm}
-        \item Central finding: constraint tightness and accuracy are \textbf{non-monotone}, with Hits@1 dropping 5.2pp.
-        \vspace{0.3cm}
-        \item SIR is introduced as the first diagnostic for constraint quality, decoupled from accuracy.
-    \end{itemize}
+  \begin{itemize}
+    \item DCA-Trie v1 achieves 100\% faithfulness, 14.5\% path reduction, and FNR $<$ 5\%, validating that symbolic gates meaningfully tighten the search space at negligible latency cost.
+    \vspace{0.3cm}
+    \item However, Hits@1 dropped 5.2pp, demonstrating that constraint tightness and answer accuracy are non-monotone.
+    \vspace{0.3cm}
+    \item Future work should pursue constraint quality and reasoning accuracy as separate optimisation targets, rather than assuming tighter constraints yield better answers.
+    \vspace{0.3cm}
+    \item SIR enables systematic comparison of oracles without conflating structural filtering with downstream accuracy.
+  \end{itemize}
 \end{frame}
 
 %Recommendation
@@ -469,13 +581,13 @@
 \begin{frame}{References (1/2)}
     \footnotesize
     \begin{itemize}
-        \item Brown, T. et al. (2020). Language Models are Few-Shot Learners. \emph{Advances in NeurIPS}, 33, 1877--1901.
+        \item Brown, Tom and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared D. and Dhariwal, Prafulla and Neelakantan, Arvind and Sastry, Girish and Askell, Amanda and Agarwal, Sandhini and Herbert-Voss, Ariel and Krueger, Gretchen and Henighan, Tom and Child, Rewon and Ramesh, Aditya and Ziegler, Daniel and Wu, Jeffrey and Winter, Clemens and Hesse, Chris and Chen, Mark and Sigler, Eric and Litwin, Mateusz and Gray, Scott and Chess, Benjamin and Clark, Jack and Berner, Christopher and McCandlish, Sam and Radford, Alec and Sutskever, Ilya and Amodei, Dario. (2020). Language Models are Few-Shot Learners. \emph{Advances in NeurIPS}, 33, 1877--1901.
         \vspace{0.3cm}
-        \item De Cao, N. et al. (2021). Autoregressive Entity Retrieval. \emph{ICLR}.
+        \item De Cao, Nicola and Izacard, Gautier and Riedel, Sebastian and Petroni, Fabio. (2021). Autoregressive Entity Retrieval. \emph{Proceedings of ICLR}.
         \vspace{0.3cm}
-        \item Geng, S. et al. (2023). Grammar-Constrained Decoding for Structured NLP Tasks without Finetuning. \emph{Proceedings of EMNLP}.
+        \item Geng, Saibo and Josifoski, Martin and Peyrard, Maxime and West, Robert. (2023). Grammar-Constrained Decoding for Structured NLP Tasks without Finetuning. \emph{Proceedings of EMNLP}.
         \vspace{0.3cm}
-        \item He, G. et al. (2021). Improving Multi-Hop KBQA by Learning Intermediate Supervision Signals. \emph{Proceedings of WSDM}, 553--556.
+        \item He, Gaole and Lan, Yunshi and Jiang, Jing and Zhao, Wayne Xin and Wen, Ji-Rong. (2021). Improving Multi-Hop KBQA by Learning Intermediate Supervision Signals. \emph{Proceedings of WSDM}, 553--556.
     \end{itemize}
 \end{frame}
 
@@ -483,15 +595,15 @@
 \begin{frame}{References (2/2)}
     \footnotesize
     \begin{itemize}
-        \item Lan, Y. et al. (2023). Complex Knowledge Base Question Answering: A Survey. \emph{IEEE Trans. Knowledge and Data Engineering}, 35(11), 11196--11215.
+        \item Lan, Yunshi and He, Gaole and Jiang, Jinhao and Jiang, Jing and Zhao, Wayne Xin and Wen, Ji-Rong. (2023). Complex Knowledge Base Question Answering: A Survey. \emph{IEEE Trans. Knowledge and Data Engineering}, 35(11), 11196--11215.
         \vspace{0.3cm}
-        \item Lewis, P. et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. \emph{Advances in NeurIPS}, 33, 9459--9474.
+        \item Lewis, Patrick and Perez, Ethan and Piktus, Aleksandra and Petroni, Fabio and Karpukhin, Vladimir and Goyal, Naman and Kuttler, Heinrich and Lewis, Mike and Yih, Wen-tau and Rocktaschel, Tim and Riedel, Sebastian and Kiela, Douwe. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. \emph{Advances in NeurIPS}, 33, 9459--9474.
         \vspace{0.3cm}
-        \item Li, K. et al. (2025). Decoding on Graphs: Faithful and Sound Reasoning on Knowledge Graphs. \emph{Proceedings of ACL}, 24349--24364.
+        \item Li, Kun and Zhang, Tianhua and Wu, Xixin and Luo, Hongyin and Glass, James R. and Meng, Helen M. (2025). Decoding on Graphs: Faithful and Sound Reasoning on Knowledge Graphs. \emph{Proceedings of ACL}, 24349--24364.
         \vspace{0.3cm}
-        \item Luo, L. et al. (2025). Graph-Constrained Reasoning: Faithful Reasoning on KGs with LLMs. \emph{Proceedings of ICML}, 267, 41540--41565.
+        \item Luo, Linhao and Zhao, Zicheng and Haffari, Gholamreza and Li, Yuan-Fang and Gong, Chen and Pan, Shirui. (2025). Graph-Constrained Reasoning: Faithful Reasoning on KGs with LLMs. \emph{Proceedings of ICML}, 267, 41540--41565.
         \vspace{0.3cm}
-        \item Willard, B. T. and Louf, R. (2023). Efficient Guided Generation for Large Language Models. \emph{arXiv:2307.09702}.
+        \item Willard, Brandon T. and Louf, Rémi. (2023). Efficient Guided Generation for Large Language Models. \emph{arXiv:2307.09702}.
     \end{itemize}
 \end{frame}
 
