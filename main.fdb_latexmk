@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1785138421.93654 "/home/bernard/research/projects/final_project_ppt/main.tex" "main.pdf" "main" 1785138425.28095 0
-  "/home/bernard/research/projects/final_project_ppt/main.tex" 1785138421.66385 27086 5b354d17bb6e7c880ce2a2871497c815 ""
+["pdflatex"] 1785141868.40152 "/home/bernard/research/projects/final_project_ppt/main.tex" "main.pdf" "main" 1785141871.66002 0
+  "/home/bernard/research/projects/final_project_ppt/main.tex" 1785141868.16985 26745 371cddad75b956610dbc15417f0d2335 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1775415801 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1775415801 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1775415801 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -48,8 +48,6 @@
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb" 1775415801 25168 33771b85f45c82138dd7745db7092d1c ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi9.pfb" 1775415801 25029 6f2cec9646ca278302ed7d604e506e3e ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1775415801 32569 5e5ddc8df908dea60932f3c484a54c0d ""
-  "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb" 1775415801 32915 7bf7720c61a5b3a7ff25b0964421c9b6 ""
-  "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1775415801 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1775415801 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb" 1775415801 32442 c975af247b6702f7ca0c299af3616b80 ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb" 1775415801 24287 6b803fa9eb1ddff9112e00519b09dd9e ""
@@ -277,10 +275,10 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1776361471 5385779 47c0c393a77fd4a098bacfd57d66b88a ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1776361422 2328190 51116836b2cccca14406eb1d938d3a88 ""
   "WhatsApp Image 2025-03-11 at 11.07.51_bbf10778.jpg" 1785024076.83577 26436 d60e8cf5f6f9f827b6ece306f29a317c ""
-  "main.aux" 1785138425.13329 4674 94b744ce7b4af510cc8adf1ae3c0e14e "pdflatex"
-  "main.nav" 1785138425.13515 3155 b379335c0c1e73cb5bf3ba258b1317d0 "pdflatex"
-  "main.out" 1785138423.04183 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.tex" 1785138421.66385 27086 5b354d17bb6e7c880ce2a2871497c815 ""
+  "main.aux" 1785141871.50966 4560 cc7d010e169dd9285b351e9fdc068ef5 "pdflatex"
+  "main.nav" 1785141871.511 3155 b379335c0c1e73cb5bf3ba258b1317d0 "pdflatex"
+  "main.out" 1785141869.37413 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.tex" 1785141868.16985 26745 371cddad75b956610dbc15417f0d2335 ""
   (generated)
   "main.aux"
   "main.log"
